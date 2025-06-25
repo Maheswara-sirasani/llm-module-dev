@@ -17,3 +17,15 @@ a=[1,2,3]
 b=a
 b.append(5)
 print
+
+
+#real example
+
+product_name="laptop"
+price=45000
+quantity_in_stock=1000
+is_stock_available=True
+
+inventory_value=price*quantity_in_stock
+
+print(inventory_value)

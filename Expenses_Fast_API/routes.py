@@ -43,5 +43,15 @@ def get_expense_by_id(expense_id: int):
         if expense.id == expense_id:
             return expense
     raise HTTPException(status_code=404, detail="Expense not found")
+@router.delete("/expenses/{expense_id}")
+def delete_expense(expense_id: int):
+    expenses = load_expenses()
+    for index, expense in enumerate(expenses):
+        if expense.id == expense_id:
+            deleted_expense = expenses.pop(index)
+            save_expenses(expenses)
+            return {"message": "Expense deleted", "deleted": deleted_expense}
+    raise HTTPException(status_code=404, detail="Expense not found")
+ 
  
  

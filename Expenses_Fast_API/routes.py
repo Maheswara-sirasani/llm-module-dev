@@ -27,4 +27,21 @@ def get_total_expenses():
     expenses = load_expenses()
     total = sum(exp.amount for exp in expenses)
     return {"total": total}
+@router.put("/expenses/{expense_id}", response_model=Expense)
+def update_expense(expense_id: int, updated_expense: Expense):
+    expenses = load_expenses()
+    for index, exp in enumerate(expenses):
+        if exp.id == expense_id:
+            expenses[index] = updated_expense
+            save_expenses(expenses)
+            return updated_expense
+    raise HTTPException(status_code=404, detail="Expense not found")
+@router.get("/expenses/{expense_id}", response_model=Expense)
+def get_expense_by_id(expense_id: int):
+    expenses = load_expenses()
+    for expense in expenses:
+        if expense.id == expense_id:
+            return expense
+    raise HTTPException(status_code=404, detail="Expense not found")
+ 
  

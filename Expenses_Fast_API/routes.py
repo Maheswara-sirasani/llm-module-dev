@@ -22,3 +22,9 @@ def get_monthly_total(year:int,month:int):
     expenses=load_expenses()
     total=sum(e.amount for e in expenses if e.date.year==year and e.date.month==month)
     return{"year":year,"month":month,"total":total}
+@router.get("/expenses/total")
+def get_total_expenses():
+    expenses = load_expenses()
+    total = sum(exp.amount for exp in expenses)
+    return {"total": total}
+ 

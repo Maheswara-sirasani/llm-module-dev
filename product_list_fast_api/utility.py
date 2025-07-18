@@ -1,22 +1,18 @@
-import os
 import json
-from typing import List
 from models import Product
-
-Product_list_file = "Products.json"
-
+from typing import List
+from pathlib import Path
+ 
+DATA_FILE = Path("products.json")
+ 
 def load_products() -> List[Product]:
-     if not os.path.exists(Product_list_file):
-            with open(Product_list_file, "w") as f:
-             json.dump([], f)
+    if not DATA_FILE.exists():
+        return []
+    with open(DATA_FILE, "r") as f:
+        data = json.load(f)
+    return [Product(**item) for item in data]
  
-     with open(Product_list_file, "r") as f:
-       return [Product(**exp) for exp in json.load(f)]
- 
-# Save products to the JSON file
 def save_products(products: List[Product]):
-    with open(Product_list_file, "w") as f:
-        json.dump([exp.dict() for exp in products], f, indent=2)
+    with open(DATA_FILE, "w") as f:
+        json.dump([p.dict() for p in products], f, indent=4)
  
-    
-    

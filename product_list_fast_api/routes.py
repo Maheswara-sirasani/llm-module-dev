@@ -27,22 +27,8 @@ def add_product(product: Product):
     products = load_products()
     for p in products:
         if p.product_name == product.product_name and p.brand == product.brand:
-            raise HTTPException(
-                status_code=400,
-                detail=f"{product.product_name} from {product.brand} already exists."
-            )
+            raise HTTPException(status_code=400, detail="Product with same name and brand already exists")
     products.append(product)
     save_products(products)
     return product
  
-@router.post("/products/brand/stock")
-def brand_stock(query: BrandQuery):
-    products = load_products()
-    brand_products = [p for p in products if p.brand.lower() == query.brand.lower()]
-    if not brand_products:
-        raise HTTPException(status_code=404, detail="Brand not found.")
-    total_stock = sum(p.stock for p in brand_products)
-    return {"brand": query.brand, "total_stock": total_stock}
- 
-
-  

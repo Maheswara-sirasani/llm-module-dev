@@ -1,0 +1,17 @@
+
+    [
+        {
+            "Product_name":"laptop",
+            "Brand":"Dell",
+            "price":29999.0,
+            "Stock_availability":10
+            
+        },
+
+        {
+              "Product_name":"mobile",
+              "Brand":"one plus",
+              "price":15000.0,
+              "Stock_availability":5
+        }
+    ]

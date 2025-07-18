@@ -1,21 +1,7 @@
-
-    [
-       
-        {
-  "product_name": "laptop",
-  "brand": "Dell",
-  "price": 75000,
-  "stock": 10,
-  "date": "2025-07-03"
-},
-{
-  "product_name": "lap",
-  "brand": "lenova",
-  "price": 75000,
-  "stock": 10,
-  "date": "2025-07-03"
-}
-
-       
-
-    ]
+[
+    {
+        "product_name": "mobile",
+        "brand": "mi",
+        "price": 7500.0,
+        "stock": 19,
+        "date": 

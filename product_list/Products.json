@@ -16,5 +16,11 @@
         "brand": "samsung",
         "price": 7500.0,
         "stock": 19
+    },
+    {
+        "product_name": "laptop",
+        "brand": "lenova",
+        "price": 7500.0,
+        "stock": 12
     }
 ]

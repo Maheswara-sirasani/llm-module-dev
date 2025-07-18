@@ -29,3 +29,15 @@ is_stock_available=True
 inventory_value=price*quantity_in_stock
 
 print(inventory_value)
+
+
+age=25
+count=1_00_00_000
+hex_dec=0xff
+bin_value=0b1010
+print(type(age))
+print(type(count))
+print(type(hex_dec))
+print(type(bin_value))
+
+ 

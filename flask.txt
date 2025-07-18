@@ -33,7 +33,7 @@ pip install flask
  
 3. Basic Example Of Flask App
  
-example1.py
+flask_ex.py
  
 from flask import Flask
  
@@ -48,7 +48,7 @@ if __name__ == "__main__":
  
 Run it:
  
-python example1.py
+python flask_ex.py
  
 Visit:  http://127.0.0.1:5000
 
@@ -112,8 +112,8 @@ Setup:
  
 from flask_sqlalchemy import SQLAlchemy
  
-router.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
-db = SQLAlchemy(router)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
+db = SQLAlchemy(app)
  
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -121,12 +121,22 @@ class User(db.Model):
  
 Create tables:
  
-with router.app_context():
+with app.app_context():
     db.create_all()
  
-
+ 
+---
  
 8. 📦 Modular Code with Blueprints
+ 
+Structure:
+ 
+flask_app/
+│
+├── app.py
+└── users/
+    ├── __init__.py
+    └── routes.py
  
 routes.py
  
@@ -138,22 +148,26 @@ users = Blueprint("users", __name__)
 def get_users():
     return "All users"
  
-Register in router.py
+Register in app.py
  
 from users.routes import users
-router.register_blueprint(users)
+app.register_blueprint(users)
  
+ 
+---
  
 9. 🌐 Creating REST APIs
  
 from flask import jsonify
  
-@router.route("/api/data")
+@app.route("/api/data")
 def data():
     return jsonify({"id": 1, "name": "Flask"})
  
 ✅ You can use Flask-RESTful for complex APIs.
  
+ 
+---
  
 10. 🔐 Authentication with Flask-Login
  
@@ -173,7 +187,7 @@ Use decorators:
  
 from flask_login import login_required
  
-@router.route("/dashboard")
+@app.route("/dashboard")
 @login_required
 def dashboard():
     return "Private Dashboard"
@@ -183,13 +197,14 @@ def dashboard():
  
 11. ❗ Error Handling
  
-@router.errorhandler(404)
+@app.errorhandler(404)
 def not_found(error):
     return render_template("404.html"), 404
  
  
+---
  
-12. 🚢 Deployment (GitHub & Docker)
+12. 🚢 Deployment (Heroku & Docker)
  
 Dockerfile
  
@@ -199,12 +214,14 @@ COPY . .
 RUN pip install -r requirements.txt
 CMD ["python", "app.py"]
  
-GitHub
+Heroku
  
-Git add .
-git commit -m "message"
-git push origin  main
+heroku login
+heroku create
+git push heroku main
  
+ 
+---
  
 13. ✅ Best Practices
  
@@ -217,4 +234,13 @@ Use Jinja2 safely (no untrusted input)
 Separate config into a config.py file
  
 Use .env for DB credentials
+ 
+ 
+ 
+---
+ 
+14. 📚 Conclusion & Resources
+ 
+You’ve now seen everything from creating a Flask app to deploying it.
+ 
  

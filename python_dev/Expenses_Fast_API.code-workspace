@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../Expenses_Fast_API"
+		},
+		{
+			"path": "../product_list_fast_api"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

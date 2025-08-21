@@ -1,9 +1,14 @@
 from fastapi import FastAPI
+from database import db
+from routers import router as auth_router
 
 app=FastAPI(
     title="vehical rental service",
-    version="0.11"
+    version="0.3"
 )
+@app.on_event("startup")
+async def startup():
+    await db.users.create_index("email",unique=True)
 
 @app.get("/health")
 async def health():
@@ -13,3 +18,4 @@ async def health():
     }
     
 
+app.include_router(auth_router)

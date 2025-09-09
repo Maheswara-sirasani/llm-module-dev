@@ -7,7 +7,7 @@ from typing import List
 from pydantic import BaseModel
  
 from database import db
-from auth import get_current_user
+from auth import get_current_user,require_admin
  
 router = APIRouter(prefix="/bookings", tags=["bookings"])
  
@@ -89,3 +89,45 @@ async def my_bookings(current_user=Depends(get_current_user)):
         for b in bookings
     ]
  
+class BookingWithVehicleOut(BaseModel):
+    id: str
+    user_id: str
+    vehicle_id: str
+    vehicle_model: str
+    start_time: datetime
+    end_time: datetime
+    total_price: float
+ 
+ 
+@router.get("/all", response_model=List[BookingWithVehicleOut])
+async def all_bookings(admin=Depends(require_admin)):
+    """
+    Admin: View all bookings with vehicle details
+    """
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "vehicles",
+                "localField": "vehicle_id",
+                "foreignField": "_id",
+                "as": "vehicle"
+            }
+        },
+        {"$unwind": "$vehicle"},
+    ]
+ 
+    bookings = await db.bookings.aggregate(pipeline).to_list(100)
+ 
+    return [
+        BookingWithVehicleOut(
+            id=str(b["_id"]),
+            user_id=str(b["user_id"]),
+            vehicle_id=str(b["vehicle_id"]),
+            vehicle_model=b["vehicle"]["model"],
+            start_time=b["start_time"],
+            end_time=b["end_time"],
+            total_price=b["total_price"],
+        )
+        for b in bookings
+    ]
+  

@@ -82,4 +82,13 @@ async def require_admin(current_user=Depends(get_current_user)):
             detail="Admin privileges required"
         )
     return current_user
+@router.get("/me")
+async def get_me(current_user=Depends(get_current_user)):
+    # Return only safe details (exclude hashed password)
+    return {
+        "id": str(current_user["_id"]),
+        "name": current_user["name"],
+        "email": current_user["email"],
+        "role": current_user.get("role", "customer")
+    }
  

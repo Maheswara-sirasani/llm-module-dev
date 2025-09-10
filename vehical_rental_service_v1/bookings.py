@@ -8,6 +8,7 @@ from pydantic import BaseModel
  
 from database import db
 from auth import get_current_user,require_admin
+from utilis import calculate_refund
  
 router = APIRouter(prefix="/bookings", tags=["bookings"])
  
@@ -130,4 +131,39 @@ async def all_bookings(admin=Depends(require_admin)):
         )
         for b in bookings
     ]
-  
+@router.delete("/{booking_id}")
+async def cancel_booking(booking_id: str, current_user: dict = Depends(get_current_user)):
+    booking = await db.bookings.find_one({"_id": ObjectId(booking_id)})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if booking["user_id"] != current_user["_id"] and current_user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Not allowed to cancel this booking")
+ 
+    refund_amount = 0.0
+    cancel_info = {"status": "cancelled"}
+ 
+    if current_user["role"] == "customer":
+        refund_amount = calculate_refund(booking["start_time"], booking["total_price"])
+        cancel_info.update({
+            "refund_amount": refund_amount,
+            "cancelled_by": "customer"
+        })
+ 
+    elif current_user["role"] == "admin":
+        refund_amount = float(booking["total_price"])
+        cancel_info.update({
+            "refund_amount": refund_amount,
+            "cancelled_by": "admin"
+        })
+ 
+    await db.bookings.update_one(
+        {"_id": ObjectId(booking_id)},
+        {"$set": cancel_info}
+    )
+ 
+    return {
+        "message": f"Booking cancelled by {current_user['role']}",
+        "refund_amount": refund_amount,
+        "status": "refunded" if refund_amount > 0 else "no_refund"
+    }
+ 
